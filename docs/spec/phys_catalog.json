@@ -1,0 +1,1916 @@
+{
+ "protection_state": {
+  "columns": [
+   {
+    "name": "state_code",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "label_ko",
+    "type": "varchar(20)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "allows_login",
+    "type": "boolean",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "allows_transfer",
+    "type": "boolean",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "closes_case",
+    "type": "boolean",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "sort_order",
+    "type": "smallint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "pk_protection_state",
+    "type": "p",
+    "cols": [
+     "state_code"
+    ],
+    "def": "PRIMARY KEY (state_code)"
+   },
+   {
+    "name": "uk_protection_state_label",
+    "type": "u",
+    "cols": [
+     "label_ko"
+    ],
+    "def": "UNIQUE (label_ko)"
+   },
+   {
+    "name": "uk_protection_state_sort",
+    "type": "u",
+    "cols": [
+     "sort_order"
+    ],
+    "def": "UNIQUE (sort_order)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "allowed_transition": {
+  "columns": [
+   {
+    "name": "from_state",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "to_state",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "revoke_sessions",
+    "type": "boolean",
+    "notnull": true,
+    "default": "false",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "rotate_credential",
+    "type": "boolean",
+    "notnull": true,
+    "default": "false",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "snapshot_assets",
+    "type": "boolean",
+    "notnull": true,
+    "default": "false",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "description",
+    "type": "varchar(200)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_allowed_transition_distinct",
+    "type": "c",
+    "cols": [
+     "from_state",
+     "to_state"
+    ],
+    "def": "CHECK (((from_state)::text <> (to_state)::text))"
+   },
+   {
+    "name": "fk_allowed_transition_from",
+    "type": "f",
+    "cols": [
+     "from_state"
+    ],
+    "def": "FOREIGN KEY (from_state) REFERENCES ap.protection_state(state_code) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_allowed_transition_to",
+    "type": "f",
+    "cols": [
+     "to_state"
+    ],
+    "def": "FOREIGN KEY (to_state) REFERENCES ap.protection_state(state_code) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_allowed_transition",
+    "type": "p",
+    "cols": [
+     "from_state",
+     "to_state"
+    ],
+    "def": "PRIMARY KEY (from_state, to_state)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "operator": {
+  "columns": [
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "username",
+    "type": "varchar(150)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "display_name",
+    "type": "varchar(50)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "is_active",
+    "type": "boolean",
+    "notnull": true,
+    "default": "true",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "created_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "pk_operator",
+    "type": "p",
+    "cols": [
+     "operator_id"
+    ],
+    "def": "PRIMARY KEY (operator_id)"
+   },
+   {
+    "name": "uk_operator_username",
+    "type": "u",
+    "cols": [
+     "username"
+    ],
+    "def": "UNIQUE (username)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "account": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "login_id",
+    "type": "varchar(30)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "nickname",
+    "type": "varchar(30)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "email",
+    "type": "varchar(254)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "password_hash",
+    "type": "text",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "credential_version",
+    "type": "integer",
+    "notnull": true,
+    "default": "1",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "state_code",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": "'NORMAL'",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "created_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_account_credential_version",
+    "type": "c",
+    "cols": [
+     "credential_version"
+    ],
+    "def": "CHECK ((credential_version >= 1))"
+   },
+   {
+    "name": "ck_account_password_required",
+    "type": "c",
+    "cols": [
+     "password_hash",
+     "state_code"
+    ],
+    "def": "CHECK (((password_hash IS NOT NULL) OR ((state_code)::text = ANY ((ARRAY['PROTECTED'::character varying, 'RECOVERING'::character varying, 'LOCKED'::character varying])::text[]))))"
+   },
+   {
+    "name": "fk_account_current_credential",
+    "type": "f",
+    "cols": [
+     "account_id",
+     "credential_version"
+    ],
+    "def": "FOREIGN KEY (account_id, credential_version) REFERENCES ap.credential_history(account_id, version) ON UPDATE RESTRICT ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED",
+    "ref": "credential_history",
+    "refcols": [
+     "account_id",
+     "version"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": true
+   },
+   {
+    "name": "fk_account_state",
+    "type": "f",
+    "cols": [
+     "state_code"
+    ],
+    "def": "FOREIGN KEY (state_code) REFERENCES ap.protection_state(state_code) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_account",
+    "type": "p",
+    "cols": [
+     "account_id"
+    ],
+    "def": "PRIMARY KEY (account_id)"
+   },
+   {
+    "name": "uk_account_login_id",
+    "type": "u",
+    "cols": [
+     "login_id"
+    ],
+    "def": "UNIQUE (login_id)"
+   },
+   {
+    "name": "uk_account_nickname",
+    "type": "u",
+    "cols": [
+     "nickname"
+    ],
+    "def": "UNIQUE (nickname)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": [
+   {
+    "name": "trg_account_state_guard",
+    "constraint": false,
+    "deferred": false
+   },
+   {
+    "name": "trg_account_state_recorded",
+    "constraint": true,
+    "deferred": true
+   }
+  ]
+ },
+ "credential_history": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "version",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "reason",
+    "type": "varchar(20)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "changed_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_credential_history_reason",
+    "type": "c",
+    "cols": [
+     "reason"
+    ],
+    "def": "CHECK (((reason)::text = ANY ((ARRAY['INITIAL'::character varying, 'USER_CHANGE'::character varying, 'FORCED_ROTATION'::character varying, 'RECOVERY_RESET'::character varying])::text[])))"
+   },
+   {
+    "name": "ck_credential_history_version",
+    "type": "c",
+    "cols": [
+     "version"
+    ],
+    "def": "CHECK ((version >= 1))"
+   },
+   {
+    "name": "fk_credential_history_account",
+    "type": "f",
+    "cols": [
+     "account_id"
+    ],
+    "def": "FOREIGN KEY (account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_credential_history_operator",
+    "type": "f",
+    "cols": [
+     "operator_id"
+    ],
+    "def": "FOREIGN KEY (operator_id) REFERENCES ap.operator(operator_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "operator",
+    "refcols": [
+     "operator_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_credential_history",
+    "type": "p",
+    "cols": [
+     "account_id",
+     "version"
+    ],
+    "def": "PRIMARY KEY (account_id, version)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "device": {
+  "columns": [
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "fingerprint",
+    "type": "char(64)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "platform",
+    "type": "varchar(10)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "first_seen_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_device_fingerprint_hex",
+    "type": "c",
+    "cols": [
+     "fingerprint"
+    ],
+    "def": "CHECK ((fingerprint ~ '^[0-9a-f]{64}$'::text))"
+   },
+   {
+    "name": "ck_device_platform",
+    "type": "c",
+    "cols": [
+     "platform"
+    ],
+    "def": "CHECK (((platform)::text = ANY ((ARRAY['WINDOWS'::character varying, 'MAC'::character varying, 'ANDROID'::character varying, 'IOS'::character varying, 'OTHER'::character varying])::text[])))"
+   },
+   {
+    "name": "pk_device",
+    "type": "p",
+    "cols": [
+     "device_id"
+    ],
+    "def": "PRIMARY KEY (device_id)"
+   },
+   {
+    "name": "uk_device_fingerprint",
+    "type": "u",
+    "cols": [
+     "fingerprint"
+    ],
+    "def": "UNIQUE (fingerprint)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "account_device": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "first_seen_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "last_seen_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "trusted_at",
+    "type": "timestamptz",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "is_trusted",
+    "type": "boolean",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": true
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_account_device_seen_order",
+    "type": "c",
+    "cols": [
+     "last_seen_at",
+     "first_seen_at"
+    ],
+    "def": "CHECK ((last_seen_at >= first_seen_at))"
+   },
+   {
+    "name": "fk_account_device_account",
+    "type": "f",
+    "cols": [
+     "account_id"
+    ],
+    "def": "FOREIGN KEY (account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_account_device_device",
+    "type": "f",
+    "cols": [
+     "device_id"
+    ],
+    "def": "FOREIGN KEY (device_id) REFERENCES ap.device(device_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "device",
+    "refcols": [
+     "device_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_account_device",
+    "type": "p",
+    "cols": [
+     "account_id",
+     "device_id"
+    ],
+    "def": "PRIMARY KEY (account_id, device_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "game_session": {
+  "columns": [
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "token_hash",
+    "type": "char(64)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "ip_address",
+    "type": "inet",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "issued_credential_version",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "issued_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "expires_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "revoked_at",
+    "type": "timestamptz",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "revoked_case_id",
+    "type": "bigint",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "revoked_seq",
+    "type": "smallint",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "revoke_reason",
+    "type": "varchar(20)",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": true
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_game_session_expiry",
+    "type": "c",
+    "cols": [
+     "expires_at",
+     "issued_at"
+    ],
+    "def": "CHECK ((expires_at > issued_at))"
+   },
+   {
+    "name": "ck_game_session_revoked_by",
+    "type": "c",
+    "cols": [
+     "revoked_case_id",
+     "revoked_at"
+    ],
+    "def": "CHECK (((revoked_case_id IS NULL) OR (revoked_at IS NOT NULL)))"
+   },
+   {
+    "name": "ck_game_session_revoked_pair",
+    "type": "c",
+    "cols": [
+     "revoked_case_id",
+     "revoked_seq"
+    ],
+    "def": "CHECK (((revoked_case_id IS NULL) = (revoked_seq IS NULL)))"
+   },
+   {
+    "name": "ck_game_session_revoked_time",
+    "type": "c",
+    "cols": [
+     "revoked_at",
+     "issued_at"
+    ],
+    "def": "CHECK (((revoked_at IS NULL) OR (revoked_at >= issued_at)))"
+   },
+   {
+    "name": "ck_game_session_token_hex",
+    "type": "c",
+    "cols": [
+     "token_hash"
+    ],
+    "def": "CHECK ((token_hash ~ '^[0-9a-f]{64}$'::text))"
+   },
+   {
+    "name": "fk_game_session_account_device",
+    "type": "f",
+    "cols": [
+     "account_id",
+     "device_id"
+    ],
+    "def": "FOREIGN KEY (account_id, device_id) REFERENCES ap.account_device(account_id, device_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account_device",
+    "refcols": [
+     "account_id",
+     "device_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_game_session_credential",
+    "type": "f",
+    "cols": [
+     "account_id",
+     "issued_credential_version"
+    ],
+    "def": "FOREIGN KEY (account_id, issued_credential_version) REFERENCES ap.credential_history(account_id, version) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "credential_history",
+    "refcols": [
+     "account_id",
+     "version"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_game_session_revoked_by",
+    "type": "f",
+    "cols": [
+     "revoked_case_id",
+     "revoked_seq"
+    ],
+    "def": "FOREIGN KEY (revoked_case_id, revoked_seq) REFERENCES ap.case_transition(case_id, seq) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "case_transition",
+    "refcols": [
+     "case_id",
+     "seq"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_game_session",
+    "type": "p",
+    "cols": [
+     "session_id"
+    ],
+    "def": "PRIMARY KEY (session_id)"
+   },
+   {
+    "name": "uk_game_session_token",
+    "type": "u",
+    "cols": [
+     "token_hash"
+    ],
+    "def": "UNIQUE (token_hash)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "login_attempt": {
+  "columns": [
+   {
+    "name": "attempt_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "ip_address",
+    "type": "inet",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "attempted_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "failure_reason",
+    "type": "varchar(24)",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "success",
+    "type": "boolean",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": true
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_login_attempt_failure_reason",
+    "type": "c",
+    "cols": [
+     "failure_reason"
+    ],
+    "def": "CHECK (((failure_reason)::text = ANY ((ARRAY['BAD_PASSWORD'::character varying, 'STATE_BLOCKED'::character varying, 'PASSWORD_RESET_REQUIRED'::character varying])::text[])))"
+   },
+   {
+    "name": "ck_login_attempt_session_success",
+    "type": "c",
+    "cols": [
+     "failure_reason",
+     "session_id"
+    ],
+    "def": "CHECK (((failure_reason IS NULL) = (session_id IS NOT NULL)))"
+   },
+   {
+    "name": "fk_login_attempt_account",
+    "type": "f",
+    "cols": [
+     "account_id"
+    ],
+    "def": "FOREIGN KEY (account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_login_attempt_device",
+    "type": "f",
+    "cols": [
+     "device_id"
+    ],
+    "def": "FOREIGN KEY (device_id) REFERENCES ap.device(device_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "device",
+    "refcols": [
+     "device_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_login_attempt_session",
+    "type": "f",
+    "cols": [
+     "session_id"
+    ],
+    "def": "FOREIGN KEY (session_id) REFERENCES ap.game_session(session_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "game_session",
+    "refcols": [
+     "session_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_login_attempt",
+    "type": "p",
+    "cols": [
+     "attempt_id"
+    ],
+    "def": "PRIMARY KEY (attempt_id)"
+   },
+   {
+    "name": "uk_login_attempt_session",
+    "type": "u",
+    "cols": [
+     "session_id"
+    ],
+    "def": "UNIQUE (session_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "risk_rule": {
+  "columns": [
+   {
+    "name": "rule_code",
+    "type": "varchar(20)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "name_ko",
+    "type": "varchar(40)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "window_minutes",
+    "type": "integer",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "threshold",
+    "type": "integer",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "severity",
+    "type": "smallint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "is_enabled",
+    "type": "boolean",
+    "notnull": true,
+    "default": "true",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_risk_rule_burst_params",
+    "type": "c",
+    "cols": [
+     "rule_code",
+     "window_minutes",
+     "threshold"
+    ],
+    "def": "CHECK ((((rule_code)::text <> 'FAILED_BURST'::text) OR ((window_minutes IS NOT NULL) AND (threshold IS NOT NULL))))"
+   },
+   {
+    "name": "ck_risk_rule_severity",
+    "type": "c",
+    "cols": [
+     "severity"
+    ],
+    "def": "CHECK (((severity >= 1) AND (severity <= 3)))"
+   },
+   {
+    "name": "ck_risk_rule_threshold",
+    "type": "c",
+    "cols": [
+     "threshold"
+    ],
+    "def": "CHECK ((threshold > 0))"
+   },
+   {
+    "name": "ck_risk_rule_window",
+    "type": "c",
+    "cols": [
+     "window_minutes"
+    ],
+    "def": "CHECK ((window_minutes > 0))"
+   },
+   {
+    "name": "pk_risk_rule",
+    "type": "p",
+    "cols": [
+     "rule_code"
+    ],
+    "def": "PRIMARY KEY (rule_code)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "risk_signal": {
+  "columns": [
+   {
+    "name": "signal_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "rule_code",
+    "type": "varchar(20)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "trigger_attempt_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "detected_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "clock_timestamp()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "fk_risk_signal_attempt",
+    "type": "f",
+    "cols": [
+     "trigger_attempt_id"
+    ],
+    "def": "FOREIGN KEY (trigger_attempt_id) REFERENCES ap.login_attempt(attempt_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "login_attempt",
+    "refcols": [
+     "attempt_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_risk_signal_case",
+    "type": "f",
+    "cols": [
+     "case_id"
+    ],
+    "def": "FOREIGN KEY (case_id) REFERENCES ap.protection_case(case_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_risk_signal_rule",
+    "type": "f",
+    "cols": [
+     "rule_code"
+    ],
+    "def": "FOREIGN KEY (rule_code) REFERENCES ap.risk_rule(rule_code) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "risk_rule",
+    "refcols": [
+     "rule_code"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_risk_signal",
+    "type": "p",
+    "cols": [
+     "signal_id"
+    ],
+    "def": "PRIMARY KEY (signal_id)"
+   },
+   {
+    "name": "uk_risk_signal_id_rule",
+    "type": "u",
+    "cols": [
+     "signal_id",
+     "rule_code"
+    ],
+    "def": "UNIQUE (signal_id, rule_code)"
+   },
+   {
+    "name": "uk_risk_signal_rule_attempt",
+    "type": "u",
+    "cols": [
+     "rule_code",
+     "trigger_attempt_id"
+    ],
+    "def": "UNIQUE (rule_code, trigger_attempt_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "burst_signal": {
+  "columns": [
+   {
+    "name": "signal_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "rule_code",
+    "type": "varchar(20)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": true
+   },
+   {
+    "name": "failures_in_window",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "window_minutes",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_burst_signal_failures",
+    "type": "c",
+    "cols": [
+     "failures_in_window"
+    ],
+    "def": "CHECK ((failures_in_window > 0))"
+   },
+   {
+    "name": "ck_burst_signal_window",
+    "type": "c",
+    "cols": [
+     "window_minutes"
+    ],
+    "def": "CHECK ((window_minutes > 0))"
+   },
+   {
+    "name": "fk_burst_signal_signal",
+    "type": "f",
+    "cols": [
+     "signal_id",
+     "rule_code"
+    ],
+    "def": "FOREIGN KEY (signal_id, rule_code) REFERENCES ap.risk_signal(signal_id, rule_code) ON UPDATE RESTRICT ON DELETE CASCADE",
+    "ref": "risk_signal",
+    "refcols": [
+     "signal_id",
+     "rule_code"
+    ],
+    "on_delete": "CASCADE",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_burst_signal",
+    "type": "p",
+    "cols": [
+     "signal_id"
+    ],
+    "def": "PRIMARY KEY (signal_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "protection_case": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "opened_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "clock_timestamp()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "closed_at",
+    "type": "timestamptz",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_protection_case_period",
+    "type": "c",
+    "cols": [
+     "closed_at",
+     "opened_at"
+    ],
+    "def": "CHECK (((closed_at IS NULL) OR (closed_at >= opened_at)))"
+   },
+   {
+    "name": "fk_protection_case_account",
+    "type": "f",
+    "cols": [
+     "account_id"
+    ],
+    "def": "FOREIGN KEY (account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_protection_case",
+    "type": "p",
+    "cols": [
+     "case_id"
+    ],
+    "def": "PRIMARY KEY (case_id)"
+   }
+  ],
+  "partial_uniques": [
+   {
+    "name": "uk_protection_case_one_open",
+    "def": "(account_id) WHERE (closed_at IS NULL)"
+   }
+  ],
+  "triggers": []
+ },
+ "case_transition": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "seq",
+    "type": "smallint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "from_state",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "to_state",
+    "type": "varchar(16)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "reason",
+    "type": "varchar(500)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "transitioned_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "clock_timestamp()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_case_transition_reason",
+    "type": "c",
+    "cols": [
+     "reason"
+    ],
+    "def": "CHECK ((length(btrim((reason)::text)) > 0))"
+   },
+   {
+    "name": "ck_case_transition_seq",
+    "type": "c",
+    "cols": [
+     "seq"
+    ],
+    "def": "CHECK ((seq >= 1))"
+   },
+   {
+    "name": "fk_case_transition_allowed",
+    "type": "f",
+    "cols": [
+     "from_state",
+     "to_state"
+    ],
+    "def": "FOREIGN KEY (from_state, to_state) REFERENCES ap.allowed_transition(from_state, to_state) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "allowed_transition",
+    "refcols": [
+     "from_state",
+     "to_state"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_case_transition_case",
+    "type": "f",
+    "cols": [
+     "case_id"
+    ],
+    "def": "FOREIGN KEY (case_id) REFERENCES ap.protection_case(case_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_case_transition_operator",
+    "type": "f",
+    "cols": [
+     "operator_id"
+    ],
+    "def": "FOREIGN KEY (operator_id) REFERENCES ap.operator(operator_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "operator",
+    "refcols": [
+     "operator_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_case_transition",
+    "type": "p",
+    "cols": [
+     "case_id",
+     "seq"
+    ],
+    "def": "PRIMARY KEY (case_id, seq)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "case_asset_snapshot": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "captured_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "clock_timestamp()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "fk_case_asset_snapshot_case",
+    "type": "f",
+    "cols": [
+     "case_id"
+    ],
+    "def": "FOREIGN KEY (case_id) REFERENCES ap.protection_case(case_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_case_asset_snapshot_item",
+    "type": "f",
+    "cols": [
+     "item_id"
+    ],
+    "def": "FOREIGN KEY (item_id) REFERENCES ap.item(item_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "item",
+    "refcols": [
+     "item_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_case_asset_snapshot",
+    "type": "p",
+    "cols": [
+     "case_id",
+     "item_id"
+    ],
+    "def": "PRIMARY KEY (case_id, item_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "item_template": {
+  "columns": [
+   {
+    "name": "template_id",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "name",
+    "type": "varchar(50)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "rarity",
+    "type": "varchar(10)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "is_tradable",
+    "type": "boolean",
+    "notnull": true,
+    "default": "true",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_item_template_rarity",
+    "type": "c",
+    "cols": [
+     "rarity"
+    ],
+    "def": "CHECK (((rarity)::text = ANY ((ARRAY['COMMON'::character varying, 'RARE'::character varying, 'EPIC'::character varying, 'LEGENDARY'::character varying])::text[])))"
+   },
+   {
+    "name": "pk_item_template",
+    "type": "p",
+    "cols": [
+     "template_id"
+    ],
+    "def": "PRIMARY KEY (template_id)"
+   },
+   {
+    "name": "uk_item_template_name",
+    "type": "u",
+    "cols": [
+     "name"
+    ],
+    "def": "UNIQUE (name)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "item": {
+  "columns": [
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "template_id",
+    "type": "integer",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "owner_account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "acquired_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   }
+  ],
+  "constraints": [
+   {
+    "name": "fk_item_owner",
+    "type": "f",
+    "cols": [
+     "owner_account_id"
+    ],
+    "def": "FOREIGN KEY (owner_account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_item_template",
+    "type": "f",
+    "cols": [
+     "template_id"
+    ],
+    "def": "FOREIGN KEY (template_id) REFERENCES ap.item_template(template_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "item_template",
+    "refcols": [
+     "template_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_item",
+    "type": "p",
+    "cols": [
+     "item_id"
+    ],
+    "def": "PRIMARY KEY (item_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ },
+ "item_transfer": {
+  "columns": [
+   {
+    "name": "transfer_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": true,
+    "generated": false
+   },
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "to_account_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "requested_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "now()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "decided_at",
+    "type": "timestamptz",
+    "notnull": true,
+    "default": "clock_timestamp()",
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "reject_reason",
+    "type": "varchar(20)",
+    "notnull": false,
+    "default": null,
+    "identity": false,
+    "generated": false
+   },
+   {
+    "name": "result",
+    "type": "varchar(10)",
+    "notnull": true,
+    "default": null,
+    "identity": false,
+    "generated": true
+   }
+  ],
+  "constraints": [
+   {
+    "name": "ck_item_transfer_decided_time",
+    "type": "c",
+    "cols": [
+     "decided_at",
+     "requested_at"
+    ],
+    "def": "CHECK ((decided_at >= requested_at))"
+   },
+   {
+    "name": "ck_item_transfer_reject_reason",
+    "type": "c",
+    "cols": [
+     "reject_reason"
+    ],
+    "def": "CHECK (((reject_reason)::text = ANY ((ARRAY['SESSION_REVOKED'::character varying, 'SESSION_EXPIRED'::character varying, 'CREDENTIAL_ROTATED'::character varying, 'STATE_BLOCKED'::character varying, 'NOT_OWNER'::character varying, 'NOT_TRADABLE'::character varying])::text[])))"
+   },
+   {
+    "name": "fk_item_transfer_item",
+    "type": "f",
+    "cols": [
+     "item_id"
+    ],
+    "def": "FOREIGN KEY (item_id) REFERENCES ap.item(item_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "item",
+    "refcols": [
+     "item_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_item_transfer_session",
+    "type": "f",
+    "cols": [
+     "session_id"
+    ],
+    "def": "FOREIGN KEY (session_id) REFERENCES ap.game_session(session_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "game_session",
+    "refcols": [
+     "session_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "fk_item_transfer_to_account",
+    "type": "f",
+    "cols": [
+     "to_account_id"
+    ],
+    "def": "FOREIGN KEY (to_account_id) REFERENCES ap.account(account_id) ON UPDATE RESTRICT ON DELETE RESTRICT",
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ],
+    "on_delete": "RESTRICT",
+    "on_update": "RESTRICT",
+    "deferred": false
+   },
+   {
+    "name": "pk_item_transfer",
+    "type": "p",
+    "cols": [
+     "transfer_id"
+    ],
+    "def": "PRIMARY KEY (transfer_id)"
+   }
+  ],
+  "partial_uniques": [],
+  "triggers": []
+ }
+}

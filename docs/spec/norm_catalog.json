@@ -1,0 +1,1148 @@
+{
+ "protection_state": {
+  "columns": [
+   {
+    "name": "state_code",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "label_ko",
+    "type": "character varying(20)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "allows_login",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "allows_transfer",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "closes_case",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "sort_order",
+    "type": "smallint",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "state_code"
+  ],
+  "fks": [],
+  "uniques": [
+   [
+    "label_ko"
+   ],
+   [
+    "sort_order"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "allowed_transition": {
+  "columns": [
+   {
+    "name": "from_state",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "to_state",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "revoke_sessions",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "rotate_credential",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "snapshot_assets",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "description",
+    "type": "character varying(200)",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "from_state",
+   "to_state"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "from_state"
+    ],
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ]
+   },
+   {
+    "cols": [
+     "to_state"
+    ],
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "operator": {
+  "columns": [
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "username",
+    "type": "character varying(150)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "display_name",
+    "type": "character varying(50)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "is_active",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "created_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "operator_id"
+  ],
+  "fks": [],
+  "uniques": [
+   [
+    "username"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "account": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "login_id",
+    "type": "character varying(30)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "nickname",
+    "type": "character varying(30)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "email",
+    "type": "character varying(254)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "password_hash",
+    "type": "text",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "credential_version",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "state_code",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "created_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "account_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id",
+     "credential_version"
+    ],
+    "ref": "credential_history",
+    "refcols": [
+     "account_id",
+     "version"
+    ]
+   },
+   {
+    "cols": [
+     "state_code"
+    ],
+    "ref": "protection_state",
+    "refcols": [
+     "state_code"
+    ]
+   }
+  ],
+  "uniques": [
+   [
+    "login_id"
+   ],
+   [
+    "nickname"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "credential_history": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "version",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "reason",
+    "type": "character varying(20)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "changed_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": false,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "account_id",
+   "version"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   },
+   {
+    "cols": [
+     "operator_id"
+    ],
+    "ref": "operator",
+    "refcols": [
+     "operator_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "device": {
+  "columns": [
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "fingerprint",
+    "type": "character(64)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "platform",
+    "type": "character varying(10)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "first_seen_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "device_id"
+  ],
+  "fks": [],
+  "uniques": [
+   [
+    "fingerprint"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "account_device": {
+  "columns": [
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "first_seen_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "last_seen_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "trusted_at",
+    "type": "timestamp with time zone",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "is_trusted",
+    "type": "boolean",
+    "notnull": true,
+    "generated": true
+   }
+  ],
+  "pk": [
+   "account_id",
+   "device_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   },
+   {
+    "cols": [
+     "device_id"
+    ],
+    "ref": "device",
+    "refcols": [
+     "device_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "game_session": {
+  "columns": [
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "token_hash",
+    "type": "character(64)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "ip_address",
+    "type": "inet",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "issued_credential_version",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "issued_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "expires_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "revoked_at",
+    "type": "timestamp with time zone",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "revoked_case_id",
+    "type": "bigint",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "revoked_seq",
+    "type": "smallint",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "revoke_reason",
+    "type": "character varying(20)",
+    "notnull": false,
+    "generated": true
+   }
+  ],
+  "pk": [
+   "session_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id",
+     "device_id"
+    ],
+    "ref": "account_device",
+    "refcols": [
+     "account_id",
+     "device_id"
+    ]
+   },
+   {
+    "cols": [
+     "account_id",
+     "issued_credential_version"
+    ],
+    "ref": "credential_history",
+    "refcols": [
+     "account_id",
+     "version"
+    ]
+   },
+   {
+    "cols": [
+     "revoked_case_id",
+     "revoked_seq"
+    ],
+    "ref": "case_transition",
+    "refcols": [
+     "case_id",
+     "seq"
+    ]
+   }
+  ],
+  "uniques": [
+   [
+    "token_hash"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "login_attempt": {
+  "columns": [
+   {
+    "name": "attempt_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "device_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "ip_address",
+    "type": "inet",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "attempted_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "failure_reason",
+    "type": "character varying(24)",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "success",
+    "type": "boolean",
+    "notnull": true,
+    "generated": true
+   }
+  ],
+  "pk": [
+   "attempt_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   },
+   {
+    "cols": [
+     "device_id"
+    ],
+    "ref": "device",
+    "refcols": [
+     "device_id"
+    ]
+   },
+   {
+    "cols": [
+     "session_id"
+    ],
+    "ref": "game_session",
+    "refcols": [
+     "session_id"
+    ]
+   }
+  ],
+  "uniques": [
+   [
+    "session_id"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "risk_rule": {
+  "columns": [
+   {
+    "name": "rule_code",
+    "type": "character varying(20)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "name_ko",
+    "type": "character varying(40)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "window_minutes",
+    "type": "integer",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "threshold",
+    "type": "integer",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "severity",
+    "type": "smallint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "is_enabled",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "rule_code"
+  ],
+  "fks": [],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "risk_signal": {
+  "columns": [
+   {
+    "name": "signal_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "rule_code",
+    "type": "character varying(20)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "trigger_attempt_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "detected_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": false,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "signal_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "trigger_attempt_id"
+    ],
+    "ref": "login_attempt",
+    "refcols": [
+     "attempt_id"
+    ]
+   },
+   {
+    "cols": [
+     "case_id"
+    ],
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ]
+   },
+   {
+    "cols": [
+     "rule_code"
+    ],
+    "ref": "risk_rule",
+    "refcols": [
+     "rule_code"
+    ]
+   }
+  ],
+  "uniques": [
+   [
+    "signal_id",
+    "rule_code"
+   ],
+   [
+    "rule_code",
+    "trigger_attempt_id"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "burst_signal": {
+  "columns": [
+   {
+    "name": "signal_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "rule_code",
+    "type": "character varying(20)",
+    "notnull": true,
+    "generated": true
+   },
+   {
+    "name": "failures_in_window",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "window_minutes",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "signal_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "signal_id",
+     "rule_code"
+    ],
+    "ref": "risk_signal",
+    "refcols": [
+     "signal_id",
+     "rule_code"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "protection_case": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "opened_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "closed_at",
+    "type": "timestamp with time zone",
+    "notnull": false,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "case_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": [
+   "(account_id) WHERE (closed_at IS NULL)"
+  ]
+ },
+ "case_transition": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "seq",
+    "type": "smallint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "from_state",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "to_state",
+    "type": "character varying(16)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "operator_id",
+    "type": "integer",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "reason",
+    "type": "character varying(500)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "transitioned_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "case_id",
+   "seq"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "from_state",
+     "to_state"
+    ],
+    "ref": "allowed_transition",
+    "refcols": [
+     "from_state",
+     "to_state"
+    ]
+   },
+   {
+    "cols": [
+     "case_id"
+    ],
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ]
+   },
+   {
+    "cols": [
+     "operator_id"
+    ],
+    "ref": "operator",
+    "refcols": [
+     "operator_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "case_asset_snapshot": {
+  "columns": [
+   {
+    "name": "case_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "captured_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "case_id",
+   "item_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "case_id"
+    ],
+    "ref": "protection_case",
+    "refcols": [
+     "case_id"
+    ]
+   },
+   {
+    "cols": [
+     "item_id"
+    ],
+    "ref": "item",
+    "refcols": [
+     "item_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "item_template": {
+  "columns": [
+   {
+    "name": "template_id",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "name",
+    "type": "character varying(50)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "rarity",
+    "type": "character varying(10)",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "is_tradable",
+    "type": "boolean",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "template_id"
+  ],
+  "fks": [],
+  "uniques": [
+   [
+    "name"
+   ]
+  ],
+  "partial_uniques": []
+ },
+ "item": {
+  "columns": [
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "template_id",
+    "type": "integer",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "owner_account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "acquired_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   }
+  ],
+  "pk": [
+   "item_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "owner_account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   },
+   {
+    "cols": [
+     "template_id"
+    ],
+    "ref": "item_template",
+    "refcols": [
+     "template_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ },
+ "item_transfer": {
+  "columns": [
+   {
+    "name": "transfer_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "item_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "to_account_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "session_id",
+    "type": "bigint",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "requested_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "decided_at",
+    "type": "timestamp with time zone",
+    "notnull": true,
+    "generated": false
+   },
+   {
+    "name": "reject_reason",
+    "type": "character varying(20)",
+    "notnull": false,
+    "generated": false
+   },
+   {
+    "name": "result",
+    "type": "character varying(10)",
+    "notnull": true,
+    "generated": true
+   }
+  ],
+  "pk": [
+   "transfer_id"
+  ],
+  "fks": [
+   {
+    "cols": [
+     "item_id"
+    ],
+    "ref": "item",
+    "refcols": [
+     "item_id"
+    ]
+   },
+   {
+    "cols": [
+     "session_id"
+    ],
+    "ref": "game_session",
+    "refcols": [
+     "session_id"
+    ]
+   },
+   {
+    "cols": [
+     "to_account_id"
+    ],
+    "ref": "account",
+    "refcols": [
+     "account_id"
+    ]
+   }
+  ],
+  "uniques": [],
+  "partial_uniques": []
+ }
+}

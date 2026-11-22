@@ -1,0 +1,99 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}통계 · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>통계</h1>
+    <p class="lead">상태별 계정 수는 현재 시점, 신호와 전이는 고른 기간의 집계입니다.</p>
+  </div>
+  <div class="chips" role="navigation" aria-label="집계 기간">
+    {% for key, label, days in periods %}
+    <a class="chip" href="{% url 'console:stats' %}?period={{ key }}"{% if period == key %} aria-current="true"{% endif %}>{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="tiles">
+  <div class="tile"><div class="tile-label">진행 중 케이스</div><div class="tile-value">{{ cases.open }}</div></div>
+  <div class="tile"><div class="tile-label">종료된 케이스</div><div class="tile-value">{{ cases.closed }}</div></div>
+  <div class="tile"><div class="tile-label">평균 처리 시간</div><div class="tile-value">{{ cases.avg_duration|duration }}</div><div class="tile-note">케이스 개시부터 종료까지</div></div>
+</div>
+
+<div class="split">
+  <section class="card">
+    <div class="card-head"><h2>상태별 계정 수</h2><span class="hint">현재</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>상태</th><th class="r">계정</th><th></th></tr></thead>
+        <tbody>
+          {% for s in states %}
+          <tr>
+            <td><a href="{% url 'console:accounts' %}?state={{ s.state_code }}">{% state_badge s.state_code s.label_ko %}</a></td>
+            <td class="r num">{{ s.n }}</td>
+            <td class="bar-cell">{% bar s.n state_max %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>규칙별 위험 신호</h2><span class="hint">탐지 시각 기준</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>규칙</th><th class="r">전체</th><th class="r">미처리</th><th class="r">케이스 연결</th><th></th></tr></thead>
+        <tbody>
+          {% for s in signals %}
+          <tr{% if s.is_total %} class="total"{% endif %}>
+            <td>{% if s.is_total %}합계{% else %}{{ s.name_ko }} {% severity_badge s.severity %}{% endif %}</td>
+            <td class="r num">{{ s.total }}</td>
+            <td class="r num{% if s.open %} cell-alert{% endif %}">{{ s.open }}</td>
+            <td class="r num">{{ s.handled }}</td>
+            <td class="bar-cell">{% if not s.is_total %}{% bar s.total signal_max 'alert' %}{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="split">
+  <section class="card">
+    <div class="card-head"><h2>전이별 처리 건수</h2><span class="hint">허용 전이 전체 · 쓰이지 않은 전이는 0</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>전이</th><th class="r">건수</th><th></th><th>마지막 실행</th></tr></thead>
+        <tbody>
+          {% for t in transitions %}
+          <tr>
+            <td class="nowrap">{% state_badge t.from_state t.from_label %} → {% state_badge t.to_state t.to_label %}</td>
+            <td class="r num">{{ t.n }}</td>
+            <td class="bar-cell">{% bar t.n transition_max %}</td>
+            <td class="num nowrap muted">{{ t.last_at|date:"Y-m-d H:i"|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>운영자별 처리 건수</h2><span class="hint">전이 기록의 수행자</span></div>
+    {% if operators %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>운영자</th><th class="r">전이</th><th>마지막 실행</th></tr></thead>
+        <tbody>
+          {% for o in operators %}
+          <tr><td>{{ o.name }}</td><td class="r num">{{ o.n }}</td><td class="num nowrap muted">{{ o.last_at|date:"Y-m-d H:i" }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}<p class="empty">이 기간에 실행된 전이가 없습니다.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

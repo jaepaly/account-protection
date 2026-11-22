@@ -1,0 +1,37 @@
+{% load static %}<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}계정 보호 콘솔{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'console/console.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{% url 'console:queue' %}">계정 보호 콘솔<small>운영</small></a>
+  {% if request.operator %}
+  <nav class="topnav" aria-label="주 메뉴">
+    <a href="{% url 'console:queue' %}"{% if nav == 'queue' %} aria-current="page"{% endif %}>위험 신호</a>
+    <a href="{% url 'console:accounts' %}"{% if nav == 'accounts' %} aria-current="page"{% endif %}>계정</a>
+    <a href="{% url 'console:cases' %}"{% if nav == 'cases' %} aria-current="page"{% endif %}>보호 케이스</a>
+    <a href="{% url 'console:stats' %}"{% if nav == 'stats' %} aria-current="page"{% endif %}>통계</a>
+  </nav>
+  <div class="who">
+    <span class="who-name">{{ request.operator.display_name }}</span>
+    <span class="who-id">{{ request.operator.username }}</span>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">로그아웃</button></form>
+  </div>
+  {% endif %}
+</header>
+{% block body %}
+<main class="page">
+  {% if messages %}
+  <div class="flash-list">
+    {% for message in messages %}<p class="flash flash-{{ message.level_tag }}" role="status">{{ message }}</p>{% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+{% endblock %}
+</body>
+</html>

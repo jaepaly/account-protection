@@ -1,0 +1,46 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}보호 케이스 · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>보호 케이스</h1>
+    <p class="lead">계정이 「정상」을 벗어난 때부터 정상 복귀 또는 영구 잠금까지를 한 건으로 묶은 기록입니다.</p>
+  </div>
+</div>
+
+<section class="card">
+  <div class="card-head">
+    <div class="chips" role="navigation" aria-label="진행 상태 필터">
+      <a class="chip" href="{% url 'console:cases' %}?status=open"{% if status == 'open' %} aria-current="true"{% endif %}>진행 중</a>
+      <a class="chip" href="{% url 'console:cases' %}?status=closed"{% if status == 'closed' %} aria-current="true"{% endif %}>종료</a>
+      <a class="chip" href="{% url 'console:cases' %}?status=all"{% if status == 'all' %} aria-current="true"{% endif %}>전체</a>
+    </div>
+  </div>
+  {% if cases %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>케이스</th><th>계정</th><th>진행</th><th>케이스 상태</th><th>개시</th><th>종료</th><th class="r">전이</th><th class="r">신호</th><th class="r">동결 아이템</th></tr></thead>
+      <tbody>
+        {% for c in cases %}
+        <tr>
+          <td><a class="cell-strong" href="{% url 'console:case' c.case_id %}">#{{ c.case_id }}</a></td>
+          <td><a href="{% url 'console:account' c.account_id %}">{{ c.login_id }}</a></td>
+          <td>{% if c.closed_at %}<span class="badge tone-quiet">종료</span>{% else %}<span class="badge tone-info">진행 중</span>{% endif %}</td>
+          <td>{% if c.case_state %}{% state_badge c.case_state c.case_state_label %}{% endif %}</td>
+          <td class="num nowrap">{{ c.opened_at|date:"Y-m-d H:i" }}</td>
+          <td class="num nowrap">{{ c.closed_at|date:"Y-m-d H:i"|default:"—" }}</td>
+          <td class="r num">{{ c.transitions }}</td>
+          <td class="r num">{{ c.signals }}</td>
+          <td class="r num">{{ c.snapshot_items }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "console/_pager.html" %}
+  {% else %}
+  <p class="empty">{% if status == 'open' %}진행 중인 보호 케이스가 없습니다.{% else %}해당하는 보호 케이스가 없습니다.{% endif %}</p>
+  {% endif %}
+</section>
+{% endblock %}

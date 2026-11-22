@@ -1,0 +1,11 @@
+{% extends "console/base.html" %}
+{% block title %}접근 거부 · 계정 보호 콘솔{% endblock %}
+{% block body %}
+<main class="center-wrap">
+  <section class="card plain-card"><div class="card-body">
+    <h1>접근이 거부되었습니다</h1>
+    <p>이 계정은 활성 운영자로 등록되어 있지 않아 로그아웃했습니다. 권한이 필요하면 관리자에게 문의하세요.</p>
+    <a class="btn" href="{% url 'login' %}">로그인 화면으로</a>
+  </div></section>
+</main>
+{% endblock %}

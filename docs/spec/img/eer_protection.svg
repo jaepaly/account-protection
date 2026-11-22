@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1728 1073" width="1728" height="1073" font-family="'Malgun Gothic', sans-serif" font-size="13">
+<rect width="100%" height="100%" fill="white"/>
+<g transform="translate(0,0)">
+<polyline points="275.5,279.6 439.5,219.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="415.4" y="221.2" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="493.0,219.3 643.5,277.4" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="493.0,219.3 643.5,277.4" fill="none" stroke="white" stroke-width="2"/>
+<text x="517.2" y="221.9" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="275.5,308.4 439.5,369.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="422.3" y="356.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="493.0,368.7 643.5,310.6" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="493.0,368.7 643.5,310.6" fill="none" stroke="white" stroke-width="2"/>
+<text x="510.0" y="355.5" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="729.5,294.0 847.5,294.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="825.5" y="288.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="925.5,294.0 1030.5,294.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="925.5,294.0 1030.5,294.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="947.5" y="288.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1086.5,596.0 1086.5,479.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="1086.5,596.0 1086.5,479.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="1096.5" y="505.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1086.5,429.0 1086.5,314.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="1086.5,429.0 1086.5,314.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="1096.5" y="411.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1467.5,294.0 1340.5,294.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1362.5" y="288.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1262.5,294.0 1142.5,294.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1240.5" y="288.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1506.5,312.0 1506.5,432.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1516.5" y="414.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1506.5,476.0 1506.5,584.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1516.5" y="502.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1086.5,632.0 1086.5,720.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="1086.5,632.0 1086.5,720.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="1093.5" y="680.0" font-size="11" font-style="italic" fill="#225" text-anchor="start">종료일시</text>
+<polyline points="1075.1,742.1 971.7,816.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<path d="M1022.4,772.4 Q1014.5,785.5 1029.3,782.2" fill="none" stroke="#222" stroke-width="1.5"/>
+<polyline points="1097.9,742.1 1201.3,816.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<path d="M1143.7,782.2 Q1158.6,785.5 1150.6,772.4" fill="none" stroke="#222" stroke-width="1.5"/>
+<polyline points="1068.5,1021.0 1002.0,954.5" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1024.6" y="966.9" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="979.3,920.1 953.4,852.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="979.3,920.1 953.4,852.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="980.8" y="899.9" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1104.5,1021.0 1171.0,954.5" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1148.4" y="966.9" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1193.7,920.1 1219.6,852.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="1193.7,920.1 1219.6,852.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="1192.2" y="899.9" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1086.5,274.0 1086.5,176.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="1096.5" y="202.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">1</text>
+<polyline points="1086.5,132.0 1086.5,52.0" fill="none" stroke="#222" stroke-width="5"/>
+<polyline points="1086.5,132.0 1086.5,52.0" fill="none" stroke="white" stroke-width="2"/>
+<text x="1096.5" y="114.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="1041.0,614.0 908.5,614.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="930.5" y="608.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">M</text>
+<polyline points="804.5,614.0 670.5,614.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<text x="782.5" y="608.0" font-size="12" font-weight="bold" text-anchor="middle" fill="#b00">N</text>
+<polyline points="230.0,312.0 200.5,392.9" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="216.5,312.0 113.2,405.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="197.5,303.7 156.3,314.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="197.5,284.3 90.1,257.5" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="216.5,276.0 162.1,227.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="230.0,276.0 178.3,134.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="675.9,274.0 642.2,210.7" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="688.4,274.0 700.5,143.7" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="702.5,274.0 744.3,221.8" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="729.5,280.0 820.0,250.6" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1037.0,274.0 978.5,250.4" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1067.2,274.0 1001.4,205.9" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1079.2,274.0 1043.7,176.3" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1500.0,276.0 1470.5,195.1" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1513.7,276.0 1563.8,149.9" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1542.3,276.0 1590.7,251.7" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1545.5,304.5 1638.5,329.4" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1120.4,596.0 1179.2,564.7" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1120.4,632.0 1179.1,663.3" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="1272.0,834.0 1355.5,834.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<polyline points="856.5,592.0 856.5,543.0" fill="none" stroke="#222" stroke-width="1.3"/>
+<rect x="1047.5" y="1021.0" width="78.0" height="36.0" fill="#eef2f7" stroke="#222" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="1086.5" y="1043.5" text-anchor="middle" font-weight="bold">계정</text>
+<rect x="1450.5" y="584.0" width="112.0" height="40.0" fill="#eef2f7" stroke="#222" stroke-width="1.4" stroke-dasharray="5,3"/>
+<rect x="1454.5" y="588.0" width="104.0" height="32.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="1506.5" y="608.5" text-anchor="middle" font-weight="bold">자격증명이력</text>
+<rect x="1034.5" y="16.0" width="104.0" height="36.0" fill="#eef2f7" stroke="#222" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="1086.5" y="38.5" text-anchor="middle" font-weight="bold">전이폐기세션</text>
+<rect x="592.5" y="596.0" width="78.0" height="36.0" fill="#eef2f7" stroke="#222" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="631.5" y="618.5" text-anchor="middle" font-weight="bold">아이템</text>
+<rect x="197.5" y="276.0" width="78.0" height="36.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="236.5" y="298.5" text-anchor="middle" font-weight="bold">보호상태</text>
+<rect x="643.5" y="274.0" width="86.0" height="40.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<rect x="647.5" y="278.0" width="78.0" height="32.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="686.5" y="298.5" text-anchor="middle" font-weight="bold">허용전이</text>
+<rect x="1041.0" y="596.0" width="91.0" height="36.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1086.5" y="618.5" text-anchor="middle" font-weight="bold">보호케이스</text>
+<rect x="894.5" y="816.0" width="104.0" height="36.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="946.5" y="838.5" text-anchor="middle" font-weight="bold">진행중케이스</text>
+<rect x="1181.0" y="816.0" width="91.0" height="36.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1226.5" y="838.5" text-anchor="middle" font-weight="bold">종료케이스</text>
+<rect x="1030.5" y="274.0" width="112.0" height="40.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<rect x="1034.5" y="278.0" width="104.0" height="32.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="1086.5" y="298.5" text-anchor="middle" font-weight="bold">상태전이기록</text>
+<rect x="1467.5" y="276.0" width="78.0" height="36.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1506.5" y="298.5" text-anchor="middle" font-weight="bold">운영자</text>
+<polygon points="466.5,184.0 511.5,209.0 466.5,234.0 421.5,209.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<polygon points="466.5,189.0 503.5,209.0 466.5,229.0 429.5,209.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="466.5" y="213.5" text-anchor="middle">출발</text>
+<polygon points="466.5,354.0 511.5,379.0 466.5,404.0 421.5,379.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<polygon points="466.5,359.0 503.5,379.0 466.5,399.0 429.5,379.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="466.5" y="383.5" text-anchor="middle">도착</text>
+<polygon points="886.5,272.0 925.5,294.0 886.5,316.0 847.5,294.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="886.5" y="298.5" text-anchor="middle">준수</text>
+<polygon points="1086.5,429.0 1144.5,454.0 1086.5,479.0 1028.5,454.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<polygon points="1086.5,434.0 1136.5,454.0 1086.5,474.0 1036.5,454.0" fill="none" stroke="#222" stroke-width="1.2"/>
+<text x="1086.5" y="458.5" text-anchor="middle">전이기록</text>
+<polygon points="1301.5,272.0 1340.5,294.0 1301.5,316.0 1262.5,294.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1301.5" y="298.5" text-anchor="middle">수행</text>
+<polygon points="1506.5,432.0 1558.5,454.0 1506.5,476.0 1454.5,454.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1506.5" y="458.5" text-anchor="middle">자격변경</text>
+<circle cx="1086.5" cy="734.0" r="14.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1086.5" y="739.0" text-anchor="middle" font-weight="bold">d</text>
+<polygon points="986.5,917.0 1038.5,939.0 986.5,961.0 934.5,939.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="986.5" y="943.5" text-anchor="middle">현재보호</text>
+<polygon points="1186.5,917.0 1238.5,939.0 1186.5,961.0 1134.5,939.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1186.5" y="943.5" text-anchor="middle">보호이력</text>
+<polygon points="1086.5,132.0 1138.5,154.0 1086.5,176.0 1034.5,154.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="1086.5" y="158.5" text-anchor="middle">세션폐기</text>
+<polygon points="856.5,592.0 908.5,614.0 856.5,636.0 804.5,614.0" fill="white" stroke="#222" stroke-width="1.4"/>
+<text x="856.5" y="618.5" text-anchor="middle">자산동결</text>
+<ellipse cx="195.5" cy="406.8" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="195.5" y="411.3" text-anchor="middle" font-size="12">상태코드</text>
+<line x1="171.5" y1="413.8" x2="219.5" y2="413.8" stroke="#222" stroke-width="1"/>
+<ellipse cx="99.0" cy="417.8" rx="34.5" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="99.0" y="422.3" text-anchor="middle" font-size="12">상태명</text>
+<ellipse cx="120.1" cy="323.0" rx="47.5" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="120.1" y="327.5" text-anchor="middle" font-size="12">로그인허용</text>
+<ellipse cx="57.0" cy="249.2" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="57.0" y="253.7" text-anchor="middle" font-size="12">이동허용</text>
+<ellipse cx="147.3" cy="213.7" rx="47.5" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="147.3" y="218.2" text-anchor="middle" font-size="12">케이스종료</text>
+<ellipse cx="173.2" cy="120.2" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="173.2" y="124.7" text-anchor="middle" font-size="12">표시순서</text>
+<ellipse cx="634.9" cy="196.9" rx="54.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="634.9" y="201.4" text-anchor="middle" font-size="12">세션폐기여부</text>
+<ellipse cx="701.8" cy="129.7" rx="54.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="701.8" y="134.2" text-anchor="middle" font-size="12">자격회전여부</text>
+<ellipse cx="755.2" cy="208.1" rx="54.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="755.2" y="212.6" text-anchor="middle" font-size="12">자산동결여부</text>
+<ellipse cx="843.4" cy="243.0" rx="28.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="843.4" y="247.5" text-anchor="middle" font-size="12">설명</text>
+<ellipse cx="956.7" cy="241.6" rx="28.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="956.7" y="246.1" text-anchor="middle" font-size="12">순번</text>
+<line x1="944.7" y1="248.6" x2="968.7" y2="248.6" stroke="#222" stroke-width="1" stroke-dasharray="3,2"/>
+<ellipse cx="989.3" cy="193.3" rx="28.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="989.3" y="197.8" text-anchor="middle" font-size="12">사유</text>
+<ellipse cx="1038.6" cy="162.4" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1038.6" y="166.9" text-anchor="middle" font-size="12">전이일시</text>
+<ellipse cx="1465.5" cy="181.2" rx="40.5" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1465.5" y="185.7" text-anchor="middle" font-size="12">운영자ID</text>
+<line x1="1441.9" y1="188.2" x2="1489.0" y2="188.2" stroke="#222" stroke-width="1"/>
+<ellipse cx="1569.3" cy="136.0" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1569.3" y="140.5" text-anchor="middle" font-size="12">사용자명</text>
+<ellipse cx="1613.7" cy="240.1" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1613.7" y="244.6" text-anchor="middle" font-size="12">표시이름</text>
+<ellipse cx="1670.7" cy="338.0" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1670.7" y="342.5" text-anchor="middle" font-size="12">활성여부</text>
+<ellipse cx="1201.3" cy="553.0" rx="40.5" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1201.3" y="557.5" text-anchor="middle" font-size="12">케이스ID</text>
+<line x1="1177.7" y1="560.0" x2="1224.9" y2="560.0" stroke="#222" stroke-width="1"/>
+<ellipse cx="1201.3" cy="675.0" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1201.3" y="679.5" text-anchor="middle" font-size="12">개시일시</text>
+<ellipse cx="1396.5" cy="834.0" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="1396.5" y="838.5" text-anchor="middle" font-size="12">종료일시</text>
+<ellipse cx="856.5" cy="529.0" rx="41.0" ry="14.0" fill="white" stroke="#222" stroke-width="1.2"/>
+<text x="856.5" y="533.5" text-anchor="middle" font-size="12">동결일시</text>
+</g></svg>

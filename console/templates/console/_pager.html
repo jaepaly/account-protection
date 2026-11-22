@@ -1,0 +1,12 @@
+{% if page.total %}
+<div class="pager">
+  <span class="num">{{ page.total }}건 중 {{ page.first_row }}–{{ page.last_row }}</span>
+  {% if page.pages > 1 %}
+  <nav class="pager-links" aria-label="페이지 이동">
+    {% if page.has_prev %}<a href="{% querystring page=page.prev done=None %}">이전</a>{% else %}<span class="off">이전</span>{% endif %}
+    <span class="num">{{ page.number }} / {{ page.pages }}</span>
+    {% if page.has_next %}<a href="{% querystring page=page.next done=None %}">다음</a>{% else %}<span class="off">다음</span>{% endif %}
+  </nav>
+  {% endif %}
+</div>
+{% endif %}

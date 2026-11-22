@@ -1,0 +1,93 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}케이스 #{{ case.case_id }} · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="{% url 'console:cases' %}">보호 케이스</a> / #{{ case.case_id }}</p>
+<div class="page-head">
+  <div>
+    <div class="title-row">
+      <h1>케이스 #{{ case.case_id }}</h1>
+      {% if case.closed_at %}<span class="badge tone-quiet">종료</span>{% else %}<span class="badge tone-info">진행 중</span>{% endif %}
+      {% if case.case_state %}{% state_badge case.case_state case.case_state_label %}{% endif %}
+    </div>
+    <p class="lead">계정 <a href="{% url 'console:account' case.account_id %}">{{ case.login_id }}</a> ·
+      개시 <span class="num">{{ case.opened_at|date:"Y-m-d H:i:s" }}</span>{% if case.closed_at %} · 종료 <span class="num">{{ case.closed_at|date:"Y-m-d H:i:s" }}</span>{% endif %}</p>
+  </div>
+</div>
+
+<section class="card">
+  <div class="card-head"><h2>전이 기록</h2><span class="hint">누가, 언제, 왜 상태를 바꿨는지와 그때 함께 실행된 조치</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="r">순번</th><th>시각</th><th>전이</th><th>운영자</th><th>사유</th><th>함께 실행된 조치</th></tr></thead>
+      <tbody>
+        {% for t in transitions %}
+        <tr>
+          <td class="r num">{{ t.seq }}</td>
+          <td class="num nowrap">{{ t.transitioned_at|date:"Y-m-d H:i:s" }}</td>
+          <td class="nowrap">{% state_badge t.from_state t.from_label %} → {% state_badge t.to_state t.to_label %}</td>
+          <td>{{ t.operator_name }}</td>
+          <td class="wrap">{{ t.reason }}</td>
+          <td>
+            <span class="tags">
+              {% if t.revoke_sessions %}<span class="tag">세션 폐기 {{ t.revoked_sessions }}개</span>{% endif %}
+              {% if t.rotate_credential %}<span class="tag">자격증명 회전</span>{% endif %}
+              {% if t.snapshot_assets %}<span class="tag">자산 동결</span>{% endif %}
+              {% if not t.revoke_sessions and not t.rotate_credential and not t.snapshot_assets %}<span class="muted">없음</span>{% endif %}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>연결된 위험 신호</h2><span class="hint">케이스를 열 때 그 계정의 미처리 신호를 연결합니다</span></div>
+  {% if signals %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>심각도</th><th>규칙</th><th>발생 시각</th><th>탐지 근거</th><th>IP</th></tr></thead>
+      <tbody>
+        {% for s in signals %}
+        <tr>
+          <td>{% severity_badge s.severity %}</td>
+          <td>{{ s.rule_name }}</td>
+          <td class="num nowrap">{{ s.occurred_at|date:"Y-m-d H:i:s" }}</td>
+          <td>{% if s.failures_in_window %}{{ s.window_minutes }}분 안에 실패 {{ s.failures_in_window }}회{% else %}신뢰하지 않는 기기 #{{ s.device_id }}의 첫 로그인{% endif %}</td>
+          <td class="mono">{{ s.ip }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">연결된 위험 신호가 없습니다. 신호 없이 운영자가 직접 연 케이스입니다.</p>{% endif %}
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h2>동결한 자산</h2>
+    <span class="hint">보호 진입 시점의 보유 아이템 {{ snapshot|length }}개{% if snapshot %} · 그 뒤 소유자가 바뀐 것 {{ moved }}개{% endif %}</span>
+  </div>
+  {% if snapshot %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="r">아이템</th><th>이름</th><th>등급</th><th>거래</th><th>동결 시각</th><th>현재 소유자</th></tr></thead>
+      <tbody>
+        {% for i in snapshot %}
+        <tr>
+          <td class="r num muted">{{ i.item_id }}</td>
+          <td>{{ i.name }}</td>
+          <td>{{ i.rarity|rarity_label }}</td>
+          <td>{% if i.is_tradable %}가능{% else %}<span class="muted">귀속</span>{% endif %}</td>
+          <td class="num nowrap">{{ i.captured_at|date:"Y-m-d H:i:s" }}</td>
+          <td>{% if i.still_owned %}<span class="badge tone-ok">그대로</span>{% else %}<span class="badge tone-alert">이동됨</span> <a href="{% url 'console:account' i.owner_account_id %}">{{ i.owner_login }}</a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">동결한 자산이 없습니다. 자산 동결은 「보호」·「영구 잠금」으로 들어갈 때 실행됩니다.</p>{% endif %}
+</section>
+{% endblock %}

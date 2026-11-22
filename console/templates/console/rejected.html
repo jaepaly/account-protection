@@ -1,0 +1,51 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}처리 거부 · 계정 보호 콘솔{% endblock %}
+{% block content %}
+{% if acc %}<p class="crumbs"><a href="{% url 'console:accounts' %}">계정</a> / <a href="{% url 'console:account' account_id %}">{{ acc.login_id }}</a> / 처리 거부</p>{% endif %}
+<section class="rejected" role="alert">
+  <div class="rejected-head">
+    <h1>요청이 거부되었습니다 — {{ rej.title }}</h1>
+    <p>{{ rej.explanation }}</p>
+  </div>
+  <div class="rejected-body">
+    <dl class="facts">
+      <dt>요청</dt><dd>{{ attempt }}</dd>
+      {% if acc %}<dt>대상 계정</dt><dd>{{ acc.login_id }} <span class="muted num">#{{ account_id }}</span></dd>{% endif %}
+      <dt>요청한 운영자</dt><dd>{{ request.operator.display_name }} <span class="mono muted">{{ request.operator.username }}</span></dd>
+      <dt>거부 코드</dt><dd class="mono">{{ rej.code }}</dd>
+      <dt>막은 곳</dt><dd>{{ rej.where }}</dd>
+      {% if rej.db_message %}<dt>DB 메시지</dt><dd class="mono">{{ rej.db_message }}</dd>{% endif %}
+    </dl>
+
+    {% if evidence %}
+    <h2 class="section-title">데이터 변경 여부</h2>
+    <p>
+      {% if unchanged %}<span class="verdict verdict-same">변경 없음 — 요청 전과 후의 값이 모두 같습니다</span>
+      {% else %}<span class="verdict verdict-diff">요청 전후 값이 다른 항목이 있습니다 — 같은 시각에 다른 처리가 있었는지 확인하세요</span>{% endif %}
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>요청 전</th><th>요청 후</th><th>비교</th></tr></thead>
+        <tbody>
+          {% for item in evidence %}
+          <tr>
+            <td>{{ item.label }}</td>
+            <td class="num">{{ item.before }}</td>
+            <td class="num">{{ item.after }}</td>
+            <td>{% if item.same %}<span class="badge tone-ok">같음</span>{% else %}<span class="badge tone-warn">다름</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">요청 직전과 거부 직후에 DB에서 각각 조회한 값입니다.</p>
+    {% endif %}
+
+    <p class="section-title">
+      {% if acc %}<a class="btn" href="{% url 'console:account' account_id %}">계정으로 돌아가기</a>
+      {% else %}<a class="btn" href="{% url 'console:queue' %}">위험 신호로 돌아가기</a>{% endif %}
+    </p>
+  </div>
+</section>
+{% endblock %}

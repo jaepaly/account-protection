@@ -1,0 +1,113 @@
+erDiagram
+    direction LR
+    protection_state ||--o{ account : "현재 상태"
+    protection_state ||--o{ allowed_transition : "출발·도착 상태"
+    allowed_transition ||--o{ case_transition : "허용된 전이만 기록"
+    account ||--|{ credential_history : "자격증명 이력"
+    account ||--o{ account_device : "사용 기기"
+    device ||--o{ account_device : "사용 계정"
+    account_device ||--o{ game_session : "세션 발급"
+    account ||--o{ login_attempt : "로그인 시도"
+    device ||--o{ login_attempt : "시도 기기"
+    game_session |o--o| login_attempt : "성공 시 발급"
+    login_attempt ||--o{ risk_signal : "탐지 원인"
+    risk_rule ||--o{ risk_signal : "규칙"
+    account ||--o{ protection_case : "보호 케이스"
+    protection_case ||--|{ case_transition : "전이 기록"
+    protection_case |o--o{ risk_signal : "근거 신호"
+    operator |o--o{ case_transition : "수행"
+    case_transition |o--o{ game_session : "세션 폐기"
+    protection_case ||--o{ case_asset_snapshot : "자산 동결"
+    item ||--o{ case_asset_snapshot : "동결 대상"
+    item_template ||--o{ item : "종류"
+    account ||--o{ item : "보유"
+    item ||--o{ item_transfer : "이동 요청"
+    game_session ||--o{ item_transfer : "요청 세션"
+    account ||--o{ item_transfer : "받는 계정"
+
+    account {
+        bigint account_id PK
+        varchar login_id UK
+        varchar state_code FK
+        int credential_version FK
+        text password_hash "NULL=폐기"
+    }
+    credential_history {
+        bigint account_id PK,FK
+        int version PK
+        varchar reason
+    }
+    device {
+        bigint device_id PK
+        char fingerprint UK "SHA-256"
+    }
+    account_device {
+        bigint account_id PK,FK
+        bigint device_id PK,FK
+        bool is_trusted
+    }
+    game_session {
+        bigint session_id PK
+        char token_hash UK "SHA-256"
+        int issued_credential_version FK
+        timestamptz revoked_at
+    }
+    login_attempt {
+        bigint attempt_id PK
+        bigint account_id FK
+        bool success
+        bigint session_id FK,UK
+    }
+    protection_state {
+        varchar state_code PK
+        bool allows_login
+        bool allows_transfer
+    }
+    allowed_transition {
+        varchar from_state PK,FK
+        varchar to_state PK,FK
+        bool revoke_sessions
+        bool rotate_credential
+    }
+    protection_case {
+        bigint case_id PK
+        bigint account_id FK
+        timestamptz closed_at "NULL=진행 중"
+    }
+    case_transition {
+        bigint case_id PK,FK
+        smallint seq PK
+        varchar from_state FK
+        varchar to_state FK
+    }
+    risk_rule {
+        varchar rule_code PK
+        int threshold
+    }
+    risk_signal {
+        bigint signal_id PK
+        bigint trigger_attempt_id FK
+        bigint case_id FK
+    }
+    item_template {
+        int template_id PK
+        varchar rarity
+        bool is_tradable
+    }
+    item {
+        bigint item_id PK
+        bigint owner_account_id FK
+    }
+    item_transfer {
+        bigint transfer_id PK
+        bigint session_id FK
+        varchar result
+    }
+    operator {
+        int operator_id PK
+        varchar username UK
+    }
+    case_asset_snapshot {
+        bigint case_id PK,FK
+        bigint item_id PK,FK
+    }

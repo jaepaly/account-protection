@@ -1,0 +1,54 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}계정 · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>계정</h1>
+    <p class="lead">이메일은 마스킹된 값만 표시됩니다.</p>
+  </div>
+</div>
+
+<section class="card">
+  <div class="card-head">
+    <form class="search" method="get" action="{% url 'console:accounts' %}" role="search">
+      <input type="search" name="q" value="{{ q }}" maxlength="60" placeholder="로그인 ID · 닉네임 · 계정 번호" aria-label="계정 검색">
+      <select name="state" aria-label="상태">
+        <option value="">모든 상태</option>
+        {% for s in states %}<option value="{{ s.state_code }}"{% if state == s.state_code %} selected{% endif %}>{{ s.label_ko }} ({{ s.n }})</option>{% endfor %}
+      </select>
+      <label class="check"><input type="checkbox" name="attention" value="1"{% if attention %} checked{% endif %}> 미처리 신호 있는 계정만</label>
+      <button type="submit" class="btn">검색</button>
+      {% if q or state or attention %}<a href="{% url 'console:accounts' %}">초기화</a>{% endif %}
+    </form>
+  </div>
+  {% if accounts %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th class="r">번호</th><th>로그인 ID</th><th>닉네임</th><th>이메일</th><th>상태</th>
+            <th class="r">유효 세션</th><th class="r">미처리 신호</th><th class="r">아이템</th><th>진행 중 케이스</th></tr>
+      </thead>
+      <tbody>
+        {% for a in accounts %}
+        <tr>
+          <td class="r num muted">{{ a.account_id }}</td>
+          <td><a class="cell-strong" href="{% url 'console:account' a.account_id %}">{{ a.login_id }}</a></td>
+          <td>{{ a.nickname }}</td>
+          <td class="mono">{{ a.email_masked }}</td>
+          <td>{% state_badge a.state_code a.state_label %}</td>
+          <td class="r num">{{ a.active_sessions }}</td>
+          <td class="r num{% if a.open_signals %} cell-alert{% endif %}">{{ a.open_signals }}</td>
+          <td class="r num">{{ a.item_count }}</td>
+          <td>{% if a.open_case_id %}<a href="{% url 'console:case' a.open_case_id %}">#{{ a.open_case_id }}</a>{% else %}<span class="muted">—</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "console/_pager.html" %}
+  {% else %}
+  <p class="empty">조건에 맞는 계정이 없습니다.</p>
+  {% endif %}
+</section>
+{% endblock %}

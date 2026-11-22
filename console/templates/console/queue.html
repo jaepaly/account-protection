@@ -1,0 +1,64 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}위험 신호 · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>위험 신호</h1>
+    <p class="lead">아직 케이스에 연결되지 않은 신호입니다. 심각도가 높고 최근에 발생한 것부터 보입니다.</p>
+  </div>
+  <form method="post" action="{% url 'console:detect' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn" title="전체 로그인 이력에 탐지 규칙을 다시 적용합니다. 이미 있는 신호는 중복으로 만들지 않습니다.">전체 탐지 실행</button>
+  </form>
+</div>
+
+<div class="tiles">
+  <div class="tile{% if open_total %} tile-strong{% endif %}">
+    <div class="tile-label">미처리 신호</div>
+    <div class="tile-value">{{ open_total }}</div>
+  </div>
+  {% for s in states %}
+  <a class="tile" href="{% url 'console:accounts' %}?state={{ s.state_code }}">
+    <div class="tile-label">{% state_badge s.state_code s.label_ko %} 계정</div>
+    <div class="tile-value">{{ s.n }}</div>
+  </a>
+  {% endfor %}
+</div>
+
+<section class="card">
+  <div class="card-head">
+    <div class="chips" role="navigation" aria-label="규칙 필터">
+      <a class="chip" href="{% url 'console:queue' %}"{% if not rule %} aria-current="true"{% endif %}>전체<span class="count">{{ open_total }}</span></a>
+      {% for r in rules %}
+      <a class="chip" href="{% url 'console:queue' %}?rule={{ r.rule_code }}"{% if rule == r.rule_code %} aria-current="true"{% endif %}>{{ r.name_ko }}<span class="count">{{ r.open }}</span></a>
+      {% endfor %}
+    </div>
+  </div>
+  {% if signals %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>심각도</th><th>규칙</th><th>계정</th><th>계정 상태</th><th>발생 시각</th><th>탐지 근거</th><th>IP</th></tr>
+      </thead>
+      <tbody>
+        {% for s in signals %}
+        <tr>
+          <td>{% severity_badge s.severity %}</td>
+          <td>{{ s.rule_name }}</td>
+          <td><a class="cell-strong" href="{% url 'console:account' s.account_id %}">{{ s.login_id }}</a></td>
+          <td>{% state_badge s.state_code s.state_label %}</td>
+          <td class="num nowrap">{{ s.occurred_at|date:"Y-m-d H:i:s" }}</td>
+          <td>{% if s.failures_in_window %}{{ s.window_minutes }}분 안에 실패 {{ s.failures_in_window }}회{% else %}신뢰하지 않는 기기 #{{ s.device_id }}의 첫 로그인{% endif %}</td>
+          <td class="mono">{{ s.ip }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "console/_pager.html" %}
+  {% else %}
+  <p class="empty">미처리 위험 신호가 없습니다.</p>
+  {% endif %}
+</section>
+{% endblock %}

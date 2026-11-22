@@ -1,0 +1,266 @@
+{% extends "console/base.html" %}
+{% load console_tags %}
+{% block title %}{{ acc.login_id }} · 계정 보호 콘솔{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="{% url 'console:accounts' %}">계정</a> / {{ acc.login_id }}</p>
+<div class="page-head">
+  <div class="title-row">
+    <h1>{{ acc.login_id }}</h1>
+    <span class="sub">{{ acc.nickname }}</span>
+    {% state_badge acc.state_code acc.state_label %}
+  </div>
+</div>
+
+{% if result %}
+<section class="result" role="status">
+  <h2>전이를 실행했습니다: {{ result.from_label }} → {{ result.to_label }}</h2>
+  <p>케이스 #{{ result.case_id }}의 {{ result.seq }}번째 전이로 기록되었습니다.</p>
+  <table>
+    <thead><tr><th>기록된 운영자</th><th>시각</th><th>사유</th><th class="r">폐기한 세션</th><th>자격증명</th><th class="r">동결한 아이템</th><th class="r">연결한 신호</th><th>케이스</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>{{ result.operator_name }}</td>
+        <td class="num nowrap">{{ result.transitioned_at|date:"Y-m-d H:i:s" }}</td>
+        <td class="wrap">{{ result.reason }}</td>
+        <td class="r num">{% if result.revoke_sessions %}{{ result.revoked_sessions }}{% else %}<span class="muted">해당 없음</span>{% endif %}</td>
+        <td>{% if result.rotate_credential %}회전 · 비밀번호 폐기{% else %}<span class="muted">변경 없음</span>{% endif %}</td>
+        <td class="r num">{% if result.snapshot_assets %}{{ result.snapshot_items }}{% else %}<span class="muted">해당 없음</span>{% endif %}</td>
+        <td class="r num">{{ result.linked_signals }}</td>
+        <td>{% if result.closed_at %}종료{% else %}진행 중{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="source">위 값은 함수의 반환값이 아니라 실행 뒤 DB에 저장된 기록을 다시 조회한 것입니다. <a href="{% url 'console:case' result.case_id %}">케이스 #{{ result.case_id }} 보기</a></p>
+</section>
+{% endif %}
+
+<div class="split">
+  <section class="card">
+    <div class="card-head"><h2>계정 정보</h2></div>
+    <div class="card-body stack">
+      <dl class="facts">
+        <dt>계정 번호</dt><dd class="num">{{ acc.account_id }}</dd>
+        <dt>이메일</dt><dd><span class="mono">{{ acc.email_masked }}</span> <span class="hint">마스킹됨</span></dd>
+        <dt>가입</dt><dd class="num">{{ acc.created_at|date:"Y-m-d H:i" }}</dd>
+        <dt>이용 제한</dt>
+        <dd>로그인 {% if acc.allows_login %}허용{% else %}<strong>차단</strong>{% endif %} · 아이템 이동 {% if acc.allows_transfer %}허용{% else %}<strong>차단</strong>{% endif %}</dd>
+        <dt>자격증명</dt>
+        <dd>버전 <span class="num">{{ acc.credential_version }}</span> · {{ acc.credential_reason|credential_label }}
+            <span class="hint">({{ acc.credential_changed_at|date:"Y-m-d H:i" }})</span><br>
+            비밀번호 {% if acc.password_set %}설정됨{% else %}<strong>없음 — 재설정 대기</strong>{% endif %}</dd>
+        <dt>유효 세션</dt><dd class="num">{{ acc.active_sessions }}</dd>
+        <dt>보유 아이템</dt><dd class="num">{{ acc.item_count }}</dd>
+        <dt>진행 중 케이스</dt>
+        <dd>{% if acc.open_case_id %}<a href="{% url 'console:case' acc.open_case_id %}">케이스 #{{ acc.open_case_id }}</a>{% else %}<span class="muted">없음</span>{% endif %}</dd>
+      </dl>
+      <div>
+        <h3>미처리 위험 신호 {{ signals|length }}건</h3>
+        {% if signals %}
+        <ul class="signal-list">
+          {% for s in signals %}
+          <li>{% severity_badge s.severity %} <strong>{{ s.rule_name }}</strong>
+              <span class="num">{{ s.occurred_at|date:"Y-m-d H:i:s" }}</span>
+              <span class="muted">{% if s.failures_in_window %}{{ s.window_minutes }}분 안에 실패 {{ s.failures_in_window }}회{% else %}기기 #{{ s.device_id }}{% endif %} · <span class="mono">{{ s.ip }}</span></span></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>조치</h2></div>
+    <div class="card-body stack">
+      {% if transitions %}
+      <form method="post" action="{% url 'console:transition' acc.account_id %}" class="stack">
+        {% csrf_token %}
+        <input type="hidden" name="expected_state" value="{{ acc.state_code }}">
+        <fieldset>
+          <legend>현재 「{{ acc.state_label }}」에서 가능한 전이</legend>
+          {% for t in transitions %}
+          <label class="choice">
+            <input type="radio" name="to_state" value="{{ t.to_state }}" required>
+            <span class="choice-body">
+              <span>{% state_badge t.to_state t.to_label %}(으)로 전이</span>
+              <span class="choice-desc">{{ t.description }}</span>
+              <span class="tags">
+                {% if t.revoke_sessions %}<span class="tag">세션 폐기</span>{% endif %}
+                {% if t.rotate_credential %}<span class="tag">자격증명 회전</span>{% endif %}
+                {% if t.snapshot_assets %}<span class="tag">자산 동결</span>{% endif %}
+                {% if t.closes_case %}<span class="tag tag-quiet">케이스 종료</span>{% endif %}
+                {% if t.is_terminal %}<span class="tag tag-danger">되돌릴 수 없음</span>{% endif %}
+              </span>
+            </span>
+          </label>
+          {% endfor %}
+        </fieldset>
+        {% if acc.state_code == 'RECOVERING' and not acc.password_set %}
+        <p class="note">새 비밀번호가 아직 없습니다. 「정상」으로 돌아가려면 먼저 아래에서 새 비밀번호를 설정해야 합니다.</p>
+        {% endif %}
+        <div class="field">
+          <label for="reason">사유 <span class="hint">감사 기록에 그대로 남습니다 (500자 이내)</span></label>
+          <textarea id="reason" name="reason" maxlength="500" required></textarea>
+        </div>
+        {% if has_terminal %}
+        <label class="check"><input type="checkbox" name="confirm_terminal"> 되돌릴 수 없는 전이를 골랐다면 여기에 표시</label>
+        {% endif %}
+        <div>
+          <button type="submit" class="btn btn-primary">전이 실행</button>
+          <span class="hint">&nbsp;{{ request.operator.display_name }}({{ request.operator.username }}) 이름으로 기록됩니다.</span>
+        </div>
+      </form>
+      {% else %}
+      <p class="note note-quiet">「{{ acc.state_label }}」은 종착 상태입니다. 이 상태에서 나가는 전이는 없습니다.</p>
+      {% endif %}
+
+      {% if acc.state_code == 'RECOVERING' %}
+      <form method="post" action="{% url 'console:reset_password' acc.account_id %}" class="stack divided" autocomplete="off">
+        {% csrf_token %}
+        <h3>복구용 새 비밀번호 설정</h3>
+        <p class="hint">본인 확인을 마친 뒤 이용자가 정한 비밀번호를 대신 입력합니다. 8자 이상.</p>
+        <div class="field">
+          <label for="new_password">새 비밀번호</label>
+          <input type="password" id="new_password" name="new_password" autocomplete="new-password" maxlength="128" required>
+        </div>
+        <div class="field">
+          <label for="confirm_password">새 비밀번호 확인</label>
+          <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" maxlength="128" required>
+        </div>
+        <button type="submit" class="btn">비밀번호 설정</button>
+      </form>
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="계정 기록">
+  {% for key, label in tabs %}
+  <a href="{% url 'console:account' acc.account_id %}?tab={{ key }}"{% if tab == key %} aria-current="page"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+<section class="card">
+  {% if tab == 'timeline' %}
+    <div class="card-head">
+      <div class="chips" role="navigation" aria-label="사건 필터">
+        <a class="chip" href="{% url 'console:account' acc.account_id %}?tab=timeline"{% if not event_filter %} aria-current="true"{% endif %}>전체</a>
+        {% for key, label in event_filters %}
+        <a class="chip" href="{% url 'console:account' acc.account_id %}?tab=timeline&amp;ev={{ key }}"{% if event_filter == key %} aria-current="true"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% if events %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>시각</th><th>사건</th><th>내용</th><th>케이스</th></tr></thead>
+        <tbody>
+          {% for e in events %}
+          <tr>
+            <td class="num nowrap">{{ e.occurred_at|date:"Y-m-d H:i:s" }}</td>
+            <td>{% event_badge e.event_type %}</td>
+            <td class="wrap">{{ e.detail }}</td>
+            <td>{% if e.case_id %}<a href="{% url 'console:case' e.case_id %}">#{{ e.case_id }}</a>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "console/_pager.html" %}
+    {% else %}<p class="empty">해당하는 기록이 없습니다.</p>{% endif %}
+
+  {% elif tab == 'sessions' %}
+    <div class="card-head">
+      <div class="chips">
+        {% for status, n in session_summary.items %}<span class="chip">{% session_badge status %}<span class="count">{{ n }}</span></span>{% endfor %}
+      </div>
+      <span class="hint">최근 30개 · 세션 토큰은 해시로만 저장되며 이 화면에서 조회할 수 없습니다</span>
+    </div>
+    {% if sessions %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="r">세션</th><th>상태</th><th>기기</th><th>IP</th><th>발급</th><th>만료</th><th>폐기</th><th>폐기 원인</th></tr></thead>
+        <tbody>
+          {% for s in sessions %}
+          <tr>
+            <td class="r num muted">{{ s.session_id }}</td>
+            <td>{% session_badge s.status %}</td>
+            <td>#{{ s.device_id }} <span class="muted">{{ s.platform }}</span></td>
+            <td class="mono">{{ s.ip }}</td>
+            <td class="num nowrap">{{ s.issued_at|date:"Y-m-d H:i:s" }}</td>
+            <td class="num nowrap">{{ s.expires_at|date:"Y-m-d H:i" }}</td>
+            <td class="num nowrap">{{ s.revoked_at|date:"Y-m-d H:i:s"|default:"—" }}</td>
+            <td>{% if s.revoked_case_id %}<a href="{% url 'console:case' s.revoked_case_id %}">케이스 #{{ s.revoked_case_id }}의 {{ s.revoked_seq }}번째 전이</a>{% else %}{{ s.revoke_reason|revoke_label }}{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}<p class="empty">세션 기록이 없습니다.</p>{% endif %}
+
+  {% elif tab == 'devices' %}
+    {% if devices %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>기기</th><th>플랫폼</th><th>신뢰</th><th>처음 로그인</th><th>마지막 로그인</th><th class="r">이 기기의 로그인 실패</th><th class="r">같은 기기를 쓴 다른 계정</th></tr></thead>
+        <tbody>
+          {% for d in devices %}
+          <tr>
+            <td class="num">#{{ d.device_id }}</td>
+            <td>{{ d.platform }}</td>
+            <td>{% if d.is_trusted %}<span class="badge tone-ok">신뢰</span>{% else %}<span class="badge tone-warn">미신뢰</span>{% endif %}</td>
+            <td class="num nowrap">{{ d.first_seen_at|date:"Y-m-d H:i" }}</td>
+            <td class="num nowrap">{{ d.last_seen_at|date:"Y-m-d H:i" }}</td>
+            <td class="r num">{{ d.failures }}</td>
+            <td class="r num{% if d.other_accounts %} cell-alert{% endif %}">{{ d.other_accounts }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}<p class="empty">로그인에 성공한 기기가 없습니다.</p>{% endif %}
+
+  {% elif tab == 'items' %}
+    {% if items %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="r">아이템</th><th>이름</th><th>등급</th><th>거래</th><th>획득</th></tr></thead>
+        <tbody>
+          {% for i in items %}
+          <tr>
+            <td class="r num muted">{{ i.item_id }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.rarity|rarity_label }}</td>
+            <td>{% if i.is_tradable %}가능{% else %}<span class="muted">귀속</span>{% endif %}</td>
+            <td class="num nowrap">{{ i.acquired_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}<p class="empty">보유한 아이템이 없습니다.</p>{% endif %}
+
+  {% else %}
+    {% if cases %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>케이스</th><th>진행</th><th>케이스 상태</th><th>개시</th><th>종료</th><th class="r">전이</th><th class="r">신호</th><th class="r">동결 아이템</th></tr></thead>
+        <tbody>
+          {% for c in cases %}
+          <tr>
+            <td><a class="cell-strong" href="{% url 'console:case' c.case_id %}">#{{ c.case_id }}</a></td>
+            <td>{% if c.closed_at %}<span class="badge tone-quiet">종료</span>{% else %}<span class="badge tone-info">진행 중</span>{% endif %}</td>
+            <td>{% if c.case_state %}{% state_badge c.case_state c.case_state_label %}{% endif %}</td>
+            <td class="num nowrap">{{ c.opened_at|date:"Y-m-d H:i" }}</td>
+            <td class="num nowrap">{{ c.closed_at|date:"Y-m-d H:i"|default:"—" }}</td>
+            <td class="r num">{{ c.transitions }}</td>
+            <td class="r num">{{ c.signals }}</td>
+            <td class="r num">{{ c.snapshot_items }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include "console/_pager.html" %}
+    {% else %}<p class="empty">이 계정의 보호 케이스가 없습니다.</p>{% endif %}
+  {% endif %}
+</section>
+{% endblock %}
